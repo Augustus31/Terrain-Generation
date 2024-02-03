@@ -4,7 +4,9 @@ Shader "Custom/surfTest"
     {
         //_Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Texture 1", 2D) = "white" {}
+        _MainTexNM("Texture 1 Normal Map", 2D) = "white"{}
         _MountainTex("Texture 2", 2D) = "white" {}
+        _MountainTexNM("Texture 2 Normal Map", 2D) = "white"{}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
         _Low("Low", float) = -0.5
@@ -23,12 +25,16 @@ Shader "Custom/surfTest"
         #pragma target 3.0
 
         sampler2D _MainTex;
+        sampler2D _MainTexNM;
         sampler2D _MountainTex;
+        sampler2D _MountainTexNM;
 
         struct Input
         {
             float2 uv_MainTex;
             float2 uv_MountainTex;
+            float2 uv_MainTexNM;
+            float2 uv_MountainTexNM;
             float3 worldPos;
         };
 
@@ -57,17 +63,20 @@ Shader "Custom/surfTest"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             float relHeight = InverseLerp(_Low, _High, IN.worldPos.y);
-            float4 col = tex2D(_MainTex, IN.uv_MainTex * 500);
-            float4 col2 = tex2D(_MountainTex, IN.uv_MountainTex * 50);
+            float4 col = tex2D(_MainTex, IN.uv_MainTex);
+            float4 col2 = tex2D(_MountainTex, IN.uv_MountainTex);
             float4 outcol = (0.5, 0.5, 0.5, 1);
             if (relHeight <= 0.7) {
                 outcol = col;
+                o.Normal = UnpackNormal(tex2D(_MainTexNM, IN.uv_MainTexNM));
             }
             if (relHeight > 0.7 && relHeight < 0.8) {
                 outcol = col * ((0.8 - relHeight) / 0.1) + (1 - (0.8 - relHeight) / 0.1) * col2;
+                o.Normal = UnpackNormal(tex2D(_MainTexNM, IN.uv_MainTexNM)) * ((0.8 - relHeight) / 0.1) + (1 - (0.8 - relHeight) / 0.1) * UnpackNormal(tex2D(_MountainTexNM, IN.uv_MountainTexNM));
             }
             if (relHeight >= 0.8) {
                 outcol = col2;
+                o.Normal = UnpackNormal(tex2D(_MountainTexNM, IN.uv_MountainTexNM));
             }
             // Albedo comes from a texture tinted by color
             o.Albedo = outcol.rgb;

@@ -482,10 +482,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5287beaec8ecffd499d579a230907d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xDim: 10
-  zDim: 10
+  xDim: 70
+  zDim: 70
   meshfab: {fileID: 8438744782731529142, guid: cedad3961d70d3b41beb9fb52fa1a7a9, type: 3}
-  drawDistance: 3
+  drawDistance: 0
 --- !u!4 &2059464254
 Transform:
   m_ObjectHideFlags: 0

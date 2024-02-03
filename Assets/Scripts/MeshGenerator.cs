@@ -11,8 +11,8 @@ public class MeshGenerator : MonoBehaviour
     //public Color[] colors;
     private Gradient gradient;
 
-    public int xSize = 200;
-    public int zSize = 200;
+    private int xSize = 200;
+    private int zSize = 200;
 
     private float xDim = 10;
     private float zDim = 10;
@@ -29,6 +29,9 @@ public class MeshGenerator : MonoBehaviour
 
         xDim = GameObject.Find("TerrainGen").GetComponent<TerrainGen>().xDim;
         zDim = GameObject.Find("TerrainGen").GetComponent<TerrainGen>().zDim;
+
+        xSize = GameObject.Find("TerrainGen").GetComponent<TerrainGen>().xSize;
+        zSize = GameObject.Find("TerrainGen").GetComponent<TerrainGen>().zSize;
 
         CreateShape();
         UpdateMesh();
@@ -119,6 +122,7 @@ public class MeshGenerator : MonoBehaviour
         
         
     }
+
     void UpdateMesh()
     {
         mesh.Clear();
