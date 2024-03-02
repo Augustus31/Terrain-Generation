@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LitMeshMat
-  m_Shader: {fileID: 4800000, guid: 83fa2657f7199b04bb60d27a7874e679, type: 3}
+  m_Shader: {fileID: 4800000, guid: f2e540222beafb74993a5f947f7782a8, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -117,7 +117,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _High: 0.5
+    - _High: 5
     - _Low: -0.5
     - _Metallic: 0
     - _OcclusionStrength: 1

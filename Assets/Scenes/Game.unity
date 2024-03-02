@@ -368,6 +368,7 @@ GameObject:
   - component: {fileID: 1749870911}
   - component: {fileID: 1749870910}
   - component: {fileID: 1749870909}
+  - component: {fileID: 1749870913}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -453,6 +454,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1749870913
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749870908}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2059464252
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,10 +499,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5287beaec8ecffd499d579a230907d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xDim: 70
-  zDim: 70
+  xDim: 5
+  zDim: 5
+  xSize: 100
+  zSize: 100
   meshfab: {fileID: 8438744782731529142, guid: cedad3961d70d3b41beb9fb52fa1a7a9, type: 3}
-  drawDistance: 0
+  drawDistance: 4
 --- !u!4 &2059464254
 Transform:
   m_ObjectHideFlags: 0
