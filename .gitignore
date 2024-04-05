@@ -70,3 +70,6 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+/Assets\Maps\rock_0002_4k_P2fC4c/*
+/Assets\Maps\rock_0005_4k_kS8sqH/*

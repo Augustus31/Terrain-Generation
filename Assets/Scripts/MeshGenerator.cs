@@ -36,6 +36,8 @@ public class MeshGenerator : MonoBehaviour
     private float low;
     private float high;
 
+    private GameObject tg;
+
     Vector3 pos;
     // Start is called before the first frame update
     void Start()
@@ -49,14 +51,16 @@ public class MeshGenerator : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
         mc = GetComponent<MeshCollider>();
 
-        xDim = GameObject.Find("TerrainGen").GetComponent<TerrainGen>().xDim;
-        zDim = GameObject.Find("TerrainGen").GetComponent<TerrainGen>().zDim;
+        tg = GameObject.Find("TerrainGen");
 
-        xSize = GameObject.Find("TerrainGen").GetComponent<TerrainGen>().xSize;
-        zSize = GameObject.Find("TerrainGen").GetComponent<TerrainGen>().zSize;
+        xDim = tg.GetComponent<TerrainGen>().xDim;
+        zDim = tg.GetComponent<TerrainGen>().zDim;
 
-        low = -0.5f;
-        high = 0.5f;
+        xSize = tg.GetComponent<TerrainGen>().xSize;
+        zSize = tg.GetComponent<TerrainGen>().zSize;
+
+        low = 0f;
+        high = 0f;
 
         MeshA();
         //StartCoroutine(MeshC());
@@ -86,6 +90,14 @@ public class MeshGenerator : MonoBehaviour
         pos = transform.position;
         rend.material.SetFloat("_Low", low);
         rend.material.SetFloat("_High", high);
+        if (low < tg.GetComponent<TerrainGen>().lo)
+        {
+            tg.GetComponent<TerrainGen>().lo = low;
+        }
+        if (high > tg.GetComponent<TerrainGen>().hi)
+        {
+            tg.GetComponent<TerrainGen>().hi = high;
+        }
     }
 
     float fbm(float a, float b, int octaves, float amp, float freq)

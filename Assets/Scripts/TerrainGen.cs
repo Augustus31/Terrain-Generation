@@ -15,13 +15,17 @@ public class TerrainGen : MonoBehaviour
 
     public GameObject meshfab;
 
-    [SerializeField]
-    int drawDistance;
+    public int drawDistance;
+
+    public float lo;
+    public float hi;
     // Start is called before the first frame update
     void Start()
     {
         meshes = new Dictionary<Vector2Int, GameObject>();
         player = GameObject.Find("Player");
+        lo = 0;
+        hi = 0;
         StartCoroutine(updateMeshes());
         player.GetComponent<Rigidbody>().velocity = new Vector3(1, 0, 0);
     }
