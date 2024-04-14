@@ -533,7 +533,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: a9b5e4e6481f9f44abf19e21d1a81f86, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -567,7 +567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8a0f3227c4ca044e8bd1f8c28db743a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterLevel: 0.2
+  waterLevel: 0.1
 --- !u!1 &2059464252
 GameObject:
   m_ObjectHideFlags: 0
@@ -599,10 +599,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xDim: 5
   zDim: 5
-  xSize: 100
-  zSize: 100
+  xSize: 72
+  zSize: 72
   meshfab: {fileID: 8438744782731529142, guid: cedad3961d70d3b41beb9fb52fa1a7a9, type: 3}
-  drawDistance: 4
+  drawDistance: 6
   lo: 0
   hi: 0
 --- !u!4 &2059464254

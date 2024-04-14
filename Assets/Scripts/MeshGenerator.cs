@@ -23,7 +23,7 @@ public class MeshGenerator : MonoBehaviour
     private Vector3[] tempNorms;
     private Vector4[] tempTangs;
 
-    private int xSize = 100;
+    public int xSize = 100;
     private int zSize = 100;
 
     private float xDim = 10;
@@ -49,7 +49,6 @@ public class MeshGenerator : MonoBehaviour
 
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-        mc = GetComponent<MeshCollider>();
 
         tg = GameObject.Find("TerrainGen");
 
@@ -58,6 +57,8 @@ public class MeshGenerator : MonoBehaviour
 
         xSize = tg.GetComponent<TerrainGen>().xSize;
         zSize = tg.GetComponent<TerrainGen>().zSize;
+
+        deleteDistance = tg.GetComponent<TerrainGen>().drawDistance + 1;
 
         low = 0f;
         high = 0f;
@@ -311,6 +312,7 @@ public class MeshGenerator : MonoBehaviour
         simp.tangents = sTangents;
         simp.uv = sUVs;
 
+        mc = GetComponent<MeshCollider>();
         mc.sharedMesh = simp;
     }
 

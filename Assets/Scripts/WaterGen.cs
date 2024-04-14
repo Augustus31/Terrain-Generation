@@ -56,6 +56,8 @@ public class WaterGen : MonoBehaviour
         float low = tgs.lo;
         float high = tgs.hi;
         float cutoff = waterLevel * (high - low) + low;
+        gameObject.GetComponent<Renderer>().sharedMaterial.SetFloat("_Cutoff", cutoff);
+        Debug.Log(cutoff);
         for (int z = 0; z <= zSize; z++)
         {
             for (int x = 0; x <= xSize; x++)
