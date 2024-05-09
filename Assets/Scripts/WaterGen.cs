@@ -29,8 +29,8 @@ public class WaterGen : MonoBehaviour
         tg = GameObject.Find("TerrainGen");
         tgs = tg.GetComponent<TerrainGen>();
         player = GameObject.Find("Player");
-        xDim = Mathf.RoundToInt(tgs.xDim * (2 * tgs.drawDistance + 1 + 2));
-        zDim = Mathf.RoundToInt(tgs.zDim * (2 * tgs.drawDistance + 1 + 2));
+        xDim = Mathf.RoundToInt(tgs.xDim * (2 * tgs.drawDistance + 5));
+        zDim = Mathf.RoundToInt(tgs.zDim * (2 * tgs.drawDistance + 5));
 
         xSize = xDim * 10;
         zSize = zDim * 10;
@@ -46,7 +46,9 @@ public class WaterGen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.position = new Vector3(player.transform.position.x - xDim / 2, 0, player.transform.position.z - zDim / 2);
+        float xFloor = Mathf.Floor((player.transform.position.x - xDim / 2) / 10) * 10;
+        float zFloor = Mathf.Floor((player.transform.position.z - zDim / 2) / 10) * 10;
+        gameObject.transform.position = new Vector3(xFloor, 0, zFloor);
     }
 
     void CreateMesh()

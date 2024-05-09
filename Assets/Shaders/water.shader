@@ -68,7 +68,10 @@ Shader "Custom/water"
         void vert(inout appdata_full v, out Input o) {
             UNITY_INITIALIZE_OUTPUT(Input, o);
             float4 worldpos = mul(unity_ObjectToWorld, v.vertex);
-            v.vertex.y += (sin(perlin(worldpos.xz * 2)+ 25.0 * _Time)-0.5)/15 + (sin(5 * worldpos.x - worldpos.z + 25.0*_Time) - 0.5)/25 + (sin(3 * worldpos.z + worldpos.x + 25.0 * _Time)-0.5) / 25;
+            //v.vertex.y += (sin(perlin(3 * worldpos.xz * 2)+ 40.0 * _Time)-0.5)/15 + (sin(15 * worldpos.x - 3*worldpos.z + 50.0*_Time) - 0.5)/25 + (sin(9 * worldpos.z + 3 * worldpos.x + 30.0 * _Time)-0.5) / 25;
+            float factor = 0.4;
+            float timeChanger = sin(7 * perlin(0.25 * worldpos.xz) + 20 * _Time) / 10 + sin(8*worldpos.x - 5*worldpos.z + 23 * _Time)/15;
+            v.vertex.y += factor * timeChanger;
             //o.pos = mul(unity_ObjectToWorld, v.vertex).y;
             //o.customColor = abs(v.normal); pass stuff like this
 
@@ -76,10 +79,10 @@ Shader "Custom/water"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            float4 deepblue = float4(59, 102, 219, 1) / 256;
+            float4 deepblue = float4(40, 55, 219, 1) / 256;
             float4 lightblue = float4(129, 221, 240, 1) / 256;
             float dif = IN.worldPos.y - _Cutoff;
-            float relHeight = saturate(-1 + 2 / (1 + exp(-12 * dif)));
+            float relHeight = saturate(-1 + 2 / (1 + exp(-10 * dif)));
             float4 outcol = lerp(deepblue, lightblue, relHeight);
 
 
