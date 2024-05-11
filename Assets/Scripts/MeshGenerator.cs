@@ -37,6 +37,7 @@ public class MeshGenerator : MonoBehaviour
     private float high;
 
     private GameObject tg;
+    public GameObject grass;
 
     Vector3 pos;
     // Start is called before the first frame update
@@ -213,6 +214,32 @@ public class MeshGenerator : MonoBehaviour
         UVs = newUVs;
     }
 
+    IEnumerator ins()
+    {
+        for(int i = 0; i < zSize; i+=18)
+        {
+            for (int j = 0; j < xSize; j += 18)
+            {
+                System.Random rnd = new System.Random();
+                float randx = (float)rnd.NextDouble() * 5;
+                float randz = (float)rnd.NextDouble() * 5;
+                print(vertices[j]);
+                try
+                {
+                    GameObject.Instantiate(grass, transform.position + vertices[xSize * i + j + (int)randz * xSize + (int)randx], Quaternion.identity).transform.parent = this.gameObject.transform;
+                }
+                catch(System.IndexOutOfRangeException e)
+                {
+                    
+                }
+                
+                
+            }
+            yield return null;
+        }
+        
+    }
+
     async void MeshA()
     {
         await CS();
@@ -227,7 +254,7 @@ public class MeshGenerator : MonoBehaviour
         mesh.tangents = tempTangs;
         await SM();
         assignSimp();
-
+        StartCoroutine(ins());
         //mesh.RecalculateTangents();
     }
     async Task CS()

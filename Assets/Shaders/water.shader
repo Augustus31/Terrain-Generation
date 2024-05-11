@@ -79,7 +79,7 @@ Shader "Custom/water"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            float4 deepblue = float4(40, 55, 219, 1) / 256;
+            float4 deepblue = float4(50, 68, 219, 1) / 256;
             float4 lightblue = float4(129, 221, 240, 1) / 256;
             float dif = IN.worldPos.y - _Cutoff;
             float relHeight = saturate(-1 + 2 / (1 + exp(-10 * dif)));
