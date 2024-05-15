@@ -32,8 +32,8 @@ public class WaterGen : MonoBehaviour
         xDim = Mathf.RoundToInt(tgs.xDim * (2 * tgs.drawDistance + 5));
         zDim = Mathf.RoundToInt(tgs.zDim * (2 * tgs.drawDistance + 5));
 
-        xSize = xDim * 10;
-        zSize = zDim * 10;
+        xSize = xDim * 10* 2;
+        zSize = zDim * 10 * 2;
 
         gameObject.transform.position = new Vector3(player.transform.position.x - xDim / 2, 0, player.transform.position.z - zDim / 2);
 
