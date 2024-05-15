@@ -132,6 +132,19 @@ Shader "Custom/surf2"
 
             float correctedHeight = InverseLerp(0, rockFull, relHeight);
             float4 lerpedGreen = lerp(deepGreen, lightGreen, correctedHeight);
+            float perlin1 = perlin(IN.worldPos.xz * 3) * 2;
+            if (perlin1 < -0.5) {
+                col = float4(25, 75, 21, 1) / 256;
+            }
+            else if (perlin1 < 0) {
+                col = float4(35, 60, 30,1) / 256;
+            }
+            else if (perlin1 < 0.5) {
+                col = float4(20, 65, 20, 1) / 256;
+            }
+            else {
+                col = float4(31, 70, 25, 1) / 256;
+            }
             col = col * lerpedGreen * 1.3;
 
             float snowLerped = saturate(InverseLerp(snowStart, snowFull, relHeight));
