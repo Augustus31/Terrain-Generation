@@ -82,7 +82,7 @@ Shader "Custom/water"
             float4 deepblue = float4(75, 180, 222, 1) / 256;
             float4 lightblue = float4(252, 252, 252, 1) / 256;
             float dif = IN.worldPos.y - _Cutoff;
-            float relHeight = saturate(-1 + 3.5 / (1 + exp(-25 * (dif-0.03))));
+            float relHeight = saturate(-1 + 3.5 / (1 + exp(-25 * (dif-0.045))));
             float4 outcol = lerp(deepblue, lightblue, relHeight);
 
 
