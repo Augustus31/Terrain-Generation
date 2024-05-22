@@ -37,6 +37,9 @@ public class MeshGenerator : MonoBehaviour
     private float high;
 
     private GameObject tg;
+    public GameObject oak;
+    public GameObject pine;
+    public GameObject poplar;
 
     Vector3 pos;
     // Start is called before the first frame update
@@ -213,6 +216,88 @@ public class MeshGenerator : MonoBehaviour
         UVs = newUVs;
     }
 
+    IEnumerator ins()
+    {
+        for(int i = 0; i < zSize; i+=(int)(zSize/4))
+        {
+            for (int j = 0; j < xSize; j += (int)(xSize / 4))
+            {
+                System.Random rnd = new System.Random();
+                float randx = (float)rnd.NextDouble() * (int)(xSize / 4);
+                float randz = (float)rnd.NextDouble() * (int)(zSize / 4);
+
+                float decider = (float)rnd.NextDouble();
+                Vector3 vert = vertices[xSize * i + j + (int)randz * xSize + (int)randx];
+                if (vert.y > (low + (high - low) * 0.5) && vert.y < (low + (high - low) * 0.8)){
+                    try
+                    {
+                        GameObject.Instantiate(pine, transform.position + vert, Quaternion.identity).transform.parent = this.gameObject.transform;
+                    }
+                    catch (System.IndexOutOfRangeException e)
+                    {
+
+                    }
+                }
+                else if(vert.y > GameObject.Find("WaterGen").GetComponent<WaterGen>().waterLevel * (high - low) + low && vert.y < (low + (high - low) * 0.8))
+                {
+                    if (decider < 0.15)
+                    {
+                        try
+                        {
+                            GameObject.Instantiate(pine, transform.position + vert, Quaternion.identity).transform.parent = this.gameObject.transform;
+                        }
+                        catch (System.IndexOutOfRangeException e)
+                        {
+
+                        }
+                    }
+                    else if (decider < 0.3)
+                    {
+                        try
+                        {
+                            GameObject.Instantiate(poplar, transform.position + vert, Quaternion.identity).transform.parent = this.gameObject.transform;
+                        }
+                        catch (System.IndexOutOfRangeException e)
+                        {
+
+                        }
+                    }
+                    else if (decider < 0.5)
+                    {
+                        try
+                        {
+                            GameObject.Instantiate(oak, transform.position + vert, Quaternion.identity).transform.parent = this.gameObject.transform;
+                        }
+                        catch (System.IndexOutOfRangeException e)
+                        {
+
+                        }
+                    }
+                    else if(decider < 0.8)
+                    {
+                        try
+                        {
+                            int numTrees = rnd.Next(3,7);
+                            for(int n = 0; n < numTrees; n++)
+                            {
+                                GameObject.Instantiate(oak, transform.position + vertices[xSize * (i + 2*n-numTrees) + (j + rnd.Next(-1*numTrees, numTrees)) + (int)randz * xSize + (int)randx], Quaternion.identity).transform.parent = this.gameObject.transform;
+                            }   
+                        }
+                        catch (System.IndexOutOfRangeException e)
+                        {
+
+                        }
+                    }
+                }
+                
+                
+                
+            }
+            yield return null;
+        }
+        
+    }
+
     async void MeshA()
     {
         await CS();
@@ -227,7 +312,7 @@ public class MeshGenerator : MonoBehaviour
         mesh.tangents = tempTangs;
         await SM();
         assignSimp();
-
+        StartCoroutine(ins());
         //mesh.RecalculateTangents();
     }
     async Task CS()

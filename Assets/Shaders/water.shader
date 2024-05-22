@@ -70,7 +70,7 @@ Shader "Custom/water"
             float4 worldpos = mul(unity_ObjectToWorld, v.vertex);
             //v.vertex.y += (sin(perlin(3 * worldpos.xz * 2)+ 40.0 * _Time)-0.5)/15 + (sin(15 * worldpos.x - 3*worldpos.z + 50.0*_Time) - 0.5)/25 + (sin(9 * worldpos.z + 3 * worldpos.x + 30.0 * _Time)-0.5) / 25;
             float factor = 0.4;
-            float timeChanger = sin(7 * perlin(0.25 * worldpos.xz) + 20 * _Time) / 10 + sin(8*worldpos.x - 5*worldpos.z + 23 * _Time)/15;
+            float timeChanger = sin(20 * perlin(0.2 * worldpos.xz) + 20 * _Time) / 10 + sin(8*worldpos.x - 5*worldpos.z + 23 * _Time)/15;
             v.vertex.y += factor * timeChanger;
             //o.pos = mul(unity_ObjectToWorld, v.vertex).y;
             //o.customColor = abs(v.normal); pass stuff like this
@@ -79,10 +79,10 @@ Shader "Custom/water"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            float4 deepblue = float4(40, 55, 219, 1) / 256;
-            float4 lightblue = float4(129, 221, 240, 1) / 256;
+            float4 deepblue = float4(75, 180, 222, 1) / 256;
+            float4 lightblue = float4(252, 252, 252, 1) / 256;
             float dif = IN.worldPos.y - _Cutoff;
-            float relHeight = saturate(-1 + 2 / (1 + exp(-10 * dif)));
+            float relHeight = saturate(-1 + 3.5 / (1 + exp(-25 * (dif-0.045))));
             float4 outcol = lerp(deepblue, lightblue, relHeight);
 
 
