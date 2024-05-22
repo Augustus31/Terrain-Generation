@@ -12,6 +12,7 @@ Shader "Custom/surf2"
         _Metallic("Metallic", Range(0,1)) = 0.0
         _Low("Low", float) = -0.5
         _High("High", float) = 0.5
+        _CellSize("Cell Size", Range(0, 100)) = 0.1
     }
     SubShader
     {
@@ -24,6 +25,9 @@ Shader "Custom/surf2"
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
+
+        #include "Random.cginc"
+        #include "WhiteNoise.cginc"
 
         sampler2D _MainTex;
         sampler2D _MainTexNM;
@@ -47,6 +51,7 @@ Shader "Custom/surf2"
         half _Metallic;
         float _Low;
         float _High;
+        float _CellSize;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -103,6 +108,55 @@ Shader "Custom/surf2"
             return result;
         }
 
+        float3 voronoiNoise(float2 value) {
+            float2 baseCell = floor(value);
+
+            //first pass to find the closest cell
+            float minDistToCell = 10;
+            float2 toClosestCell;
+            float2 closestCell;
+            [unroll]
+            for (int x1 = -1; x1 <= 1; x1++) {
+                [unroll]
+                for (int y1 = -1; y1 <= 1; y1++) {
+                    float2 cell = baseCell + float2(x1, y1);
+                    float2 cellPosition = cell + rand2dTo2d(cell);
+                    float2 toCell = cellPosition - value;
+                    float distToCell = length(toCell);
+                    if (distToCell < minDistToCell) {
+                        minDistToCell = distToCell;
+                        closestCell = cell;
+                        toClosestCell = toCell;
+                    }
+                }
+            }
+
+            //second pass to find the distance to the closest edge
+            float minEdgeDistance = 10;
+            [unroll]
+            for (int x2 = -1; x2 <= 1; x2++) {
+                [unroll]
+                for (int y2 = -1; y2 <= 1; y2++) {
+                    float2 cell = baseCell + float2(x2, y2);
+                    float2 cellPosition = cell + rand2dTo2d(cell);
+                    float2 toCell = cellPosition - value;
+
+                    float2 diffToClosestCell = abs(closestCell - cell);
+                    bool isClosestCell = diffToClosestCell.x + diffToClosestCell.y < 0.1;
+                    if (!isClosestCell) {
+                        float2 toCenter = (toClosestCell + toCell) * 0.5;
+                        float2 cellDifference = normalize(toCell - toClosestCell);
+                        float edgeDistance = dot(toCenter, cellDifference);
+                        minEdgeDistance = min(minEdgeDistance, edgeDistance);
+                    }
+                }
+            }
+
+            //float random = rand2dTo1d(closestCell);
+            float random = nrand(closestCell);
+            return float3(minDistToCell, random, minEdgeDistance);
+        }
+
         float InverseLerp(float a, float b, float c) {
             return (c - a) / (b - a);
         }
@@ -132,6 +186,7 @@ Shader "Custom/surf2"
 
             float correctedHeight = InverseLerp(0, rockFull, relHeight);
             float4 lerpedGreen = lerp(deepGreen, lightGreen, correctedHeight);
+
             float perlin1 = perlin(IN.worldPos.xz * 3) * 2;
             if (perlin1 < -0.5) {
                 col = float4(25, 75, 21, 1) / 256;
@@ -147,16 +202,31 @@ Shader "Custom/surf2"
             }
             col = col * lerpedGreen * 1.3;
 
+            float2 posxz = IN.worldPos.xz / _CellSize;
+            float noise = voronoiNoise(posxz).y;
+            float4 brown = float4(87, 70, 70, 1) / 256;
+            float4 gray = float4(115, 112, 112, 1) / 256;
+            col3 = lerp(brown, gray, noise);
+
+            float2 posxz2 = IN.worldPos.xz / (_CellSize/2);
+            float noise2 = voronoiNoise(posxz2).y;
+            float4 darkwhite = float4(199, 197, 197, 1) / 256;
+            float4 lightwhite = float4(247, 247, 247, 1) / 256;
+            col2 = lerp(darkwhite, lightwhite, noise2);
+
             float snowLerped = saturate(InverseLerp(snowStart, snowFull, relHeight));
             float rockLerped = saturate(InverseLerp(rockStart, rockFull, relHeight));
-            if (snowLerped == 0) {
-                outcol = col* (1 - rockLerped) + col3 * (rockLerped);
+            o.Normal = lerp(lerp(UnpackNormal(tex2D(_MainTexNM, IN.uv_MainTexNM * 10)), UnpackNormal(tex2D(_RockTexNM, IN.uv_RockTexNM * 20)), rockLerped), UnpackNormal(tex2D(_MountainTexNM, IN.uv_MountainTexNM * 10)), snowLerped);
+            outcol = lerp(lerp(col, col3, rockLerped), col2, snowLerped);
+
+            /*if (snowLerped == 0) {
+                //outcol = col* (1 - rockLerped) + col3 * (rockLerped);
                 o.Normal = UnpackNormal(tex2D(_MainTexNM, IN.uv_MainTexNM * 10)) * (1 - rockLerped) + UnpackNormal(tex2D(_RockTexNM, IN.uv_RockTexNM * 20)) * (rockLerped);
             }
             else {
-                outcol = col3 * (1 - snowLerped) + col2 * (snowLerped);
+                //outcol = col3 * (1 - snowLerped) + col2 * (snowLerped);
                 o.Normal = UnpackNormal(tex2D(_RockTexNM, IN.uv_RockTexNM * 20)) * (1 - snowLerped) + UnpackNormal(tex2D(_MountainTexNM, IN.uv_MountainTexNM * 10)) * (snowLerped);
-            }
+            }*/
             //outcol = col * (1 - rockLerped) + col3 * (rockLerped) + col3 * (1 - snowLerped) + col2 * (snowLerped);
             //o.Normal = UnpackNormal(tex2D(_MainTexNM, IN.uv_MainTexNM * 10)) * (1 - rockLerped) + UnpackNormal(tex2D(_RockTexNM, IN.uv_RockTexNM * 10)) * (rockLerped) + UnpackNormal(tex2D(_RockTexNM, IN.uv_RockTexNM * 10)) * (1 - snowLerped) + UnpackNormal(tex2D(_MountainTexNM, IN.uv_MountainTexNM * 10)) * (snowLerped);
             //o.Normal = UnpackNormal(tex2D(_MainTexNM, IN.uv_MainTexNM * 10)) * (1 - lerped) + UnpackNormal(tex2D(_MountainTexNM, IN.uv_MountainTexNM * 10)) * lerped;
